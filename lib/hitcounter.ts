@@ -4,6 +4,7 @@ import * as dynamodb from '@aws-cdk/aws-dynamodb';
 
 export interface HitCounterProps {
     downstream: lambda.IFunction;
+    readCapacity?: number;
 }
 
 export class HitCounter extends cdk.Construct {
@@ -12,10 +13,16 @@ export class HitCounter extends cdk.Construct {
     public readonly table: dynamodb.Table;
 
     constructor(scope: cdk.Construct, id: string, props: HitCounterProps) {
+        if(props.readCapacity !== undefined && (props.readCapacity < 5 || props.readCapacity > 20)) {
+            throw new Error('readCapacity must be greater than 5 or less than 20');
+        }
+
         super(scope, id);
 
         const table = new dynamodb.Table(this, 'Hits', {
-            partitionKey: { name: 'path', type: dynamodb.AttributeType.STRING }
+            partitionKey: { name: 'path', type: dynamodb.AttributeType.STRING },
+            encryption: dynamodb.TableEncryption.AWS_MANAGED,
+            readCapacity: props.readCapacity ?? 5,
         });
         this.table = table;
 
