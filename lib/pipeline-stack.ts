@@ -1,6 +1,7 @@
 import * as cdk from '@aws-cdk/core';
 import * as codecommit from '@aws-cdk/aws-codecommit';
-import { CodeBuildStep, CodePipeline,CodePipelineSource } from '@aws-cdk/pipelines';
+import { CodeBuildStep, CodePipeline, CodePipelineSource } from '@aws-cdk/pipelines';
+import { WorkshopPipelineStage } from './pipeline-stage';
 
 export class WorkshopPipelineStack extends cdk.Stack {
     constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
@@ -23,6 +24,9 @@ export class WorkshopPipelineStack extends cdk.Stack {
                     'npx cdk synth'
                 ]
             })
-        })
+        });
+
+        const deploy = new WorkshopPipelineStage(this, 'Deploy');
+        const deployStage = pipeline.addStage(deploy);
     }
 }
