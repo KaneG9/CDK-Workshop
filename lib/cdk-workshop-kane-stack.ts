@@ -3,7 +3,6 @@ import * as lambda from '@aws-cdk/aws-lambda';
 import * as apigw from '@aws-cdk/aws-apigateway';
 import { HitCounter } from './hitcounter';
 import { TableViewer } from 'cdk-dynamo-table-viewer';
-import { CfnOutput } from '@aws-cdk/core';
 
 export class CdkWorkshopKaneStack extends cdk.Stack {
   public readonly hcViewerUrl: cdk.CfnOutput;
